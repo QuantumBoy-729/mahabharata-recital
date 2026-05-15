@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&family=Tiro+Devanagari+Sanskrit&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html, body, #root {
+  min-height: 100vh;
+}
+
+body {
+  @apply bg-ink-50 text-ink-900 font-sans antialiased;
+  background-image:
+    radial-gradient(ellipse 1200px 600px at 10% -10%, rgba(255, 154, 56, 0.12), transparent 60%),
+    radial-gradient(ellipse 900px 500px at 90% 10%, rgba(199, 68, 10, 0.10), transparent 60%);
+  background-attachment: fixed;
+}
+
+.prose-recital p {
+  @apply font-serif text-lg md:text-xl leading-relaxed text-ink-900 my-4;
+}
+
+.recital-sentence {
+  @apply rounded px-0.5 transition-colors duration-150 cursor-pointer;
+}
+
+.recital-sentence.is-active {
+  @apply bg-saffron-200/80 text-ink-950 shadow-[0_1px_0_rgba(0,0,0,0.04)];
+}
+
+.recital-sentence:hover:not(.is-active) {
+  @apply bg-saffron-100/70;
+}
+
+.parva-card {
+  @apply relative overflow-hidden rounded-2xl border border-ink-200/70 bg-gradient-to-br from-white to-ink-50 p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg hover:border-saffron-300;
+}
+
+.parva-card::before {
+  content: "";
+  @apply absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-saffron-400 via-saffron-500 to-saffron-700 opacity-70;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.btn-primary {
+  @apply btn bg-saffron-600 text-white hover:bg-saffron-700 active:bg-saffron-800;
+}
+
+.btn-ghost {
+  @apply btn bg-transparent text-ink-700 hover:bg-ink-100;
+}
+
+.btn-outline {
+  @apply btn border border-ink-300 bg-white text-ink-800 hover:bg-ink-50;
+}
+
+.input, .select {
+  @apply rounded-md border border-ink-300 bg-white px-3 py-1.5 text-sm text-ink-900 focus:outline-none focus:ring-2 focus:ring-saffron-400 focus:border-saffron-400;
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.ink.300') transparent;
+}
+
+/* ----- Page-turn animation -------------------------------------------------
+ * The actual animation is driven by Motion (motion/react) in SectionPage so
+ * that velocity stays continuous through the whole turn. This stage just
+ * provides the 3D perspective for the spring and clips the rotated child
+ * during the turn so the body never gets a horizontal scrollbar.
+ */
+
+.page-turn-stage {
+  perspective: 2800px;
+  perspective-origin: center top;
+  overflow-x: clip;
+}
