@@ -29,6 +29,14 @@ const SOURCE_BASE = 'https://sacred-texts.com/hin';
 const USER_AGENT =
   'mahabharata-recital scraper (educational, https://github.com/your/repo)';
 
+/**
+ * Some parvas (m12, m13) are split into lettered parts on sacred-texts.com
+ * because the printed edition was published in multiple volumes. We expose
+ * a continuous 1-indexed section numbering to the rest of the app and map
+ * back to the right URL via the `parts` array. Each entry is the count of
+ * content sections in that part; URLs are `<slug><letter><001..count>.htm`
+ * (e.g. section 173 of m12 -> m12b001.htm).
+ */
 const PARVAS = [
   { slug: 'm01', name: 'Adi Parva', sections: 236 },
   { slug: 'm02', name: 'Sabha Parva', sections: 80 },
@@ -36,16 +44,16 @@ const PARVAS = [
   { slug: 'm04', name: 'Virata Parva', sections: 72 },
   { slug: 'm05', name: 'Udyoga Parva', sections: 197 },
   { slug: 'm06', name: 'Bhishma Parva', sections: 117 },
-  { slug: 'm07', name: 'Drona Parva', sections: 202 },
+  { slug: 'm07', name: 'Drona Parva', sections: 199 },
   { slug: 'm08', name: 'Karna Parva', sections: 96 },
   { slug: 'm09', name: 'Shalya Parva', sections: 65 },
   { slug: 'm10', name: 'Sauptika Parva', sections: 18 },
-  { slug: 'm11', name: 'Stri Parva', sections: 27 },
-  { slug: 'm12', name: 'Shanti Parva', sections: 365 },
-  { slug: 'm13', name: 'Anushasana Parva', sections: 168 },
-  { slug: 'm14', name: 'Ashvamedhika Parva', sections: 96 },
+  { slug: 'm11', name: 'Stri Parva', sections: 26 },
+  { slug: 'm12', name: 'Shanti Parva', sections: 363, parts: [172, 128, 63] },
+  { slug: 'm13', name: 'Anushasana Parva', sections: 168, parts: [35, 133] },
+  { slug: 'm14', name: 'Ashvamedhika Parva', sections: 92 },
   { slug: 'm15', name: 'Ashramavasika Parva', sections: 39 },
-  { slug: 'm16', name: 'Mausala Parva', sections: 9 },
+  { slug: 'm16', name: 'Mausala Parva', sections: 8 },
   { slug: 'm17', name: 'Mahaprasthanika Parva', sections: 3 },
   { slug: 'm18', name: 'Svargarohanika Parva', sections: 5 },
 ];
@@ -64,8 +72,28 @@ function paddedSection(n) {
   return String(n).padStart(3, '0');
 }
 
-function sectionUrl(parvaSlug, section) {
-  return `${SOURCE_BASE}/${parvaSlug}/${parvaSlug}${paddedSection(section)}.htm`;
+/**
+ * Maps a continuous 1-indexed section number to the sacred-texts.com URL,
+ * accounting for parvas split into lettered parts (m12, m13). For simple
+ * parvas the URL is `<slug><NNN>.htm`; for split parvas it's
+ * `<slug><letter><NNN>.htm` where NNN is the section's index *within* its
+ * part (also 1-indexed).
+ */
+function sectionUrl(parva, section) {
+  if (!parva.parts || parva.parts.length === 0) {
+    return `${SOURCE_BASE}/${parva.slug}/${parva.slug}${paddedSection(section)}.htm`;
+  }
+  let remaining = section;
+  for (let i = 0; i < parva.parts.length; i++) {
+    if (remaining <= parva.parts[i]) {
+      const letter = String.fromCharCode('a'.charCodeAt(0) + i);
+      return `${SOURCE_BASE}/${parva.slug}/${parva.slug}${letter}${paddedSection(remaining)}.htm`;
+    }
+    remaining -= parva.parts[i];
+  }
+  throw new Error(
+    `section ${section} out of range for ${parva.slug} (parts sum to ${parva.parts.reduce((a, b) => a + b, 0)})`,
+  );
 }
 
 function sectionFilePath(parvaSlug, section) {
@@ -172,7 +200,7 @@ async function scrapeSection(parva, section, { force, delay }) {
   if (!force && existsSync(out)) {
     return { skipped: true };
   }
-  const url = sectionUrl(parva.slug, section);
+  const url = sectionUrl(parva, section);
   const html = await fetchText(url);
   const data = extractSection(html, url, parva, section);
   if (!data.paragraphs.length) {

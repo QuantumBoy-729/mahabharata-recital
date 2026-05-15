@@ -81,7 +81,7 @@ export const PARVAS: ParvaMeta[] = [
     sanskrit: 'द्रोण पर्व',
     summary:
       'The Book of Drona. The acharya Drona leads the Kaurava army; Abhimanyu falls inside the chakravyuha; Jayadratha is slain at sunset.',
-    sectionCount: 202,
+    sectionCount: 199,
   },
   {
     number: 8,
@@ -117,7 +117,7 @@ export const PARVAS: ParvaMeta[] = [
     sanskrit: 'स्त्री पर्व',
     summary:
       'The Book of the Women. Gandhari, Kunti, and the women of both houses lament on the battlefield; Gandhari curses Krishna.',
-    sectionCount: 27,
+    sectionCount: 26,
   },
   {
     number: 12,
@@ -126,7 +126,7 @@ export const PARVAS: ParvaMeta[] = [
     sanskrit: 'शान्ति पर्व',
     summary:
       'The Book of Peace. Yudhishthira is consoled by Bhishma on his arrow-bed; long discourses on dharma, statecraft, and liberation.',
-    sectionCount: 365,
+    sectionCount: 363,
   },
   {
     number: 13,
@@ -144,7 +144,7 @@ export const PARVAS: ParvaMeta[] = [
     sanskrit: 'अश्वमेधिक पर्व',
     summary:
       'The Book of the Horse Sacrifice. Yudhishthira performs the Ashvamedha; Arjuna follows the consecrated horse and battles former allies and sons.',
-    sectionCount: 96,
+    sectionCount: 92,
   },
   {
     number: 15,
@@ -162,7 +162,7 @@ export const PARVAS: ParvaMeta[] = [
     sanskrit: 'मौसल पर्व',
     summary:
       'The Book of the Clubs. The Yadavas destroy themselves in a drunken brawl; Krishna and Balarama leave the world; Dwaraka sinks into the sea.',
-    sectionCount: 9,
+    sectionCount: 8,
   },
   {
     number: 17,
